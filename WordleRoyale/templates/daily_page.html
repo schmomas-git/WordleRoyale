@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Wordle - WordleRoyale</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='daily_page.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=keyboard_backspace" />
+</head>
+<body>
+    <div class="game">
+        <div class="board-container">
+            <div class="board">
+                <div class="row">
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                </div>
+                <div class="row">
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                </div>
+                <div class="row">
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                </div>
+                <div class="row">
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                </div>
+                <div class="row">
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                </div>
+                <div class="row">
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                    <div class="tile"><span></span></div>
+                </div>
+            </div>
+
+        </div>
+        <div class="keyboard-container">
+            {%  include 'keyboard.html' %}
+        </div>
+
+
+
+    </div>
+    <p>{{ word.word }}</p>
+
+    <div>
+        <button id="cookie-button">Get Cookie!</button>
+    </div>
+
+    <script>
+        let letters = [
+            [{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0}],
+            [{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0}],
+            [{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0}],
+            [{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0}],
+            [{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0}],
+            [{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0},{letter:"", status: 0}],
+        ];
+        let stage = 0;
+        let status = 'running';
+
+
+        function renderTiles() {
+            const rows = document.querySelectorAll('.row');
+            console.log(rows);
+            for(let y = 0; y < letters.length; y++){
+                for(let x = 0; x < letters[y].length; x++){
+                    let div = rows[y].children[x]
+                    switch (letters[y][x].status){
+                        case -1:
+                            div.classList.add('absent')
+                            break;
+                        case 0:
+                            break;
+                        case 1:
+                            div.classList.add('wrong-position')
+                            break;
+                        case 2:
+                            div.classList.add('correct')
+                            break;
+                    }
+                    div.firstChild.textContent = letters[y][x].letter
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', renderTiles);
+
+        function addLetter(letter){
+            for (let i = 0; i < letters[stage].length; i++) {
+                if (letters[stage][i].letter === "") {
+                  letters[stage][i].letter = letter;
+                  console.log('replaced', letters);
+                  break;
+                }
+            }
+            renderTiles();
+        }
+        function removeLetter(){
+            for (let i = letters[stage].length - 1; i >= 0; i--) {
+                if (letters[stage][i].letter !== "") {
+                  letters[stage][i].letter = "";
+                  console.log('removed', letters);
+                  break;
+                }
+            }
+            renderTiles();
+        }
+        async function send(){
+            if(letters[stage].length !== 5 || letters[stage].at(4).letter === '' ){
+                console.log('cant send')
+                return;
+            }
+            console.log('sending', letters);
+            try {
+                const response = await fetch('/api/solve', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({stage: stage, data: letters })
+                })
+                const data = await response.json();
+                console.log('Response:', data)
+                stage = data['stage']
+                letters = data['letters']
+
+            }catch (e) {
+                console.error(e)
+            }
+
+
+            renderTiles()
+        }
+
+        document.getElementById('cookie-button').addEventListener('click', async () => {
+            try{
+                const response = await fetch('/attemptDaily');
+
+            } catch (e) {
+                console.error('Error:', e)
+            }
+        })
+    </script>
+</body>
+</html>

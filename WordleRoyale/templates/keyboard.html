@@ -1,0 +1,92 @@
+<header>
+    <div class="keyboard">
+        <div class="button-row">
+            <button data-char="Q">Q</button>
+            <button data-char="W">W</button>
+            <button data-char="E">E</button>
+            <button data-char="R">R</button>
+            <button data-char="T">T</button>
+            <button data-char="Z">Z</button>
+            <button data-char="U">U</button>
+            <button data-char="I">I</button>
+            <button data-char="O">O</button>
+            <button data-char="P">P</button>
+        </div>
+        <div class="button-row">
+            <button data-char="A">A</button>
+            <button data-char="S">S</button>
+            <button data-char="D">D</button>
+            <button data-char="F">F</button>
+            <button data-char="G">G</button>
+            <button data-char="H">H</button>
+            <button data-char="J">J</button>
+            <button data-char="K">K</button>
+            <button data-char="L">L</button>
+        </div>
+        <div class="button-row">
+            <button data-char="ENTER" class="enter-backspace">ENTER</button>
+            <button data-char="Y">Y</button>
+            <button data-char="X">X</button>
+            <button data-char="C">C</button>
+            <button data-char="V">V</button>
+            <button data-char="B">B</button>
+            <button data-char="N">N</button>
+            <button data-char="M">M</button>
+            <button data-char="BACKSPACE" class="enter-backspace"><span class="material-symbols-outlined">keyboard_backspace</span></button>
+        </div>
+    </div>
+</header>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll("button[data-char]");
+
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        const char = button.dataset.char; // get value from data-char
+          if(char.length > 1){
+              handleSpecialKeys(char);
+              return;
+          }
+        handleKeyPress(char);
+      });
+    });
+  });
+
+  document.addEventListener("keydown", (event) => {
+      if(event.ctrlKey){
+          return
+      }
+
+      const key = event.key.toUpperCase()
+      if(key.length === 1) {
+          const asChar = key.charAt(0);
+          if (key >= 'A' && key <= 'Z') {
+              handleKeyPress(key)
+          }
+      }
+      else{
+          if(key === 'BACKSPACE' || key === 'ENTER'){
+            handleSpecialKeys(key)
+          }
+      }
+  })
+
+  function handleKeyPress(char) {
+    addLetter(char);
+    // Do whatever logic you need with the character
+  }
+  function handleSpecialKeys(key){
+    switch (key) {
+        case 'BACKSPACE':
+            removeLetter()
+            break;
+        case 'ENTER':
+            send()
+            break;
+        default:
+            break;
+    }
+  }
+
+
+</script>

@@ -1,0 +1,83 @@
+body {
+    background-color: white;
+    padding: 1rem;
+}
+
+.game{
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+
+  .board-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    .board{
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+
+      .row{
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+
+        .tile{
+            display: flex;
+            flex-wrap: wrap;
+          width: 5rem;
+          height: 5rem;
+          border: 1px solid black;
+            align-content: center;
+            justify-content: center;
+
+            &.absent{
+                background-color: #9f9f9f;
+            }
+            &.wrong-position{
+                background-color: #e8cb64;
+            }
+            &.correct{
+                background-color: #3ac824;
+            }
+
+
+        }
+      }
+    }
+  }
+    .keyboard-container{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+
+        .keyboard{
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            .button-row{
+                display: flex;
+                flex-direction: row;
+                gap: 5px;
+                justify-content: center;
+
+                button{
+                    font-size: 1.25rem;
+                    font-weight: bold;
+                    width: 3rem;
+                    height: 4rem;
+                    background-color: lightgray;
+                    border: none;
+                    border-radius: 2px;
+                }
+                .enter-backspace{
+                    flex-grow: 1;
+                    font-size: 1rem;
+                }
+            }
+        }
+
+    }
+}
+
