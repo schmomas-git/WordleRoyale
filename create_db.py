@@ -8,7 +8,7 @@ with app.app_context():
     with db.session.begin():
         db.session.query(models.User).delete()
         db.session.query(models.Word).delete()
-        db.session.query(models.Session).delete()
+        db.session.query(models.DailySession).delete()
         db.session.commit()
 
     for word in WORDS:

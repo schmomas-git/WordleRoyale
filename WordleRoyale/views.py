@@ -13,31 +13,26 @@ def index():
 @app.route('/daily')
 def daily_page():
     word = db.session.get(models.Word, util.get_daily_index())
+    session_cookie = request.cookies.get('session_id')
+    if session_cookie:
+        game.get_initial_letters_daily(session_cookie)
     return render_template('daily_page.html', word=word)
 
-@app.route('/attemptDaily')
-def attempt_daily():
-    session_id = request.cookies.get('session_id')
-    if session_id:
-        current_session = db.session.get(models.Session, session_id)
-        return current_session.attempt1
+@app.route('/api/solve/daily', methods=['POST'])
+def solve_daily():
+    #checken, ob eine session vorhanden ist
+    session_id = ''
+    session_cookie = request.cookies.get('session_id')
+    if not session_cookie:
+        session_id = util.get_unique_id()
+        game.initiate_new_daily_game(session_id)
     else:
-        session_id = "456"
-        new_session = models.Session(session_id = session_id, solution = "tests", attempt1 = "t1e0s0t0s0")
-        db.session.add(new_session)
-        db.session.commit()
-        response = make_response("New session should have been created and cookie should be set")
-        response.set_cookie('session_id', session_id)
-        return response
+        session_id = session_cookie
 
-@app.route('/api/solve', methods=['POST'])
-def solve():
     data = request.get_json()
     stage = data['stage']
     letters = data['data']
-    session_id = request.cookies.get('session_id')
-    current_session = db.session.get(models.Session, session_id)
-    solution = current_session.solution
-    (response_stage, response_letters, won) = game.check_guess(stage, letters, solution)
-    response = {'stage': response_stage, 'letters': response_letters}
+    (response_stage, response_letters, won) = game.solve_daily(session_id, stage, letters)
+    response = make_response({'stage': response_stage, 'letters': response_letters})
+    response.set_cookie('session_id', session_id)
     return response

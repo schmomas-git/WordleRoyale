@@ -16,6 +16,7 @@ def test_check_guess():
     result = game.check_guess(stage, letters, solution)
     print(result)
 
+
 if __name__ == '__main__':
     test_check_guess()
 

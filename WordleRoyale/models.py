@@ -9,10 +9,11 @@ class Word(db.Model):
     id: db.Mapped[int] = db.mapped_column(primary_key=True)
     word: db.Mapped[str]
 
-class Session(db.Model):
+class DailySession(db.Model):
     session_id: db.Mapped[str] = db.mapped_column(primary_key=True)
     solution: db.Mapped[str]
-    attempt1: db.Mapped[str]
+    status: db.Mapped[str]
+    attempt1: db.Mapped[str | None] = db.mapped_column(nullable=True)
     attempt2: db.Mapped[str | None] = db.mapped_column(nullable=True)
     attempt3: db.Mapped[str | None] = db.mapped_column(nullable=True)
     attempt4: db.Mapped[str | None] = db.mapped_column(nullable=True)

@@ -1,4 +1,5 @@
-from WordleRoyale import util
+from WordleRoyale import util, db, models
+import random
 
 def check_guess(stage, letters, solution):
 
@@ -39,3 +40,54 @@ def match_word(word, solution):
 
     else:
         return None
+
+
+def get_daily_word():
+    seed = util.get_date_string() + 'WordleRoyale1s7he8est'
+    rng = random.Random(seed)
+    rows = db.session.query(models.Word).count()
+    index = rng.randrange(1, rows)
+    word = models.Word.query.get(index)
+    return str(word.word).upper()
+
+def initiate_new_daily_game(session_id):
+    solution = get_daily_word()
+    new_session = models.DailySession(session_id=session_id, solution=solution, status='running')
+    db.session.add(new_session)
+    db.session.commit()
+
+def solve_daily(session_id, stage, letters):
+    session = models.DailySession.query.get(session_id)
+    solution = session.solution
+    (new_stage, new_letters, won) = check_guess(stage, letters, solution)
+    attempt_string = util.attempt_string_from_letters(new_letters, stage)
+    '''
+    match stage:
+        case 1:
+            session.attempt1 = attempt_string
+            pass
+        case 2:
+            session.attempt2 = attempt_string
+            pass
+        case 3:
+            session.attempt3 = attempt_string
+            pass
+        case 4:
+            session.attempt4 = attempt_string
+            pass
+        case 5:
+            session.attempt5 = attempt_string
+            pass
+        case 6:
+            session.attempt6 = attempt_string
+            pass
+    '''
+    return new_stage, new_letters, won
+
+def get_initial_letters_daily(session_id):
+    letters = []
+    session = models.DailySession.query.get(session_id)
+    attempts = [session.attempt1, session.attempt2, session.attempt3, session.attempt4, session.attempt5,
+                session.attempt6]
+    for attempt in attempts:
+        print(attempt)

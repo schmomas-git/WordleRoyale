@@ -135,7 +135,7 @@
             }
             console.log('sending', letters);
             try {
-                const response = await fetch('/api/solve', {
+                const response = await fetch('/api/solve/daily', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

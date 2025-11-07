@@ -1,5 +1,6 @@
 import datetime
 import random
+import uuid
 
 
 def get_date_string():
@@ -49,3 +50,14 @@ def combine_word_matching(word, matching):
         combination.append({'letter': word[position], 'status': matching[position]})
 
     return combination
+
+def get_unique_id():
+    unique_id = uuid.uuid4()
+    return str(unique_id)
+
+def attempt_string_from_letters(letters, stage):
+    attempt = letters[stage]
+    attempt_string = ''
+    for letter in attempt:
+        attempt_string += letter['letter'] + str(letter['status'])
+    print(attempt_string)
