@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Daily Wordle - WordleRoyale
+{% endblock %}
+{% block links %}
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}" />
+{% endblock %}
+{% block content %}
+
+    <div class="content">
+        <div class="side-by-side">
+            <span>Daily Wordle</span>
+            <button id="dailyBtn">Play Daily</button>
+        </div>
+        <div class="side-by-side">
+            <span>Ranked</span>
+            <button id="rankedBtn">Play Ranked</button>
+        </div>
+    </div>
+
+    <script>
+        const dailyBtn = document.getElementById("dailyBtn");
+        const rankedBtn = document.getElementById("rankedBtn");
+        dailyBtn.addEventListener('click', () => {
+            window.location.href = "{{  url_for('daily_page') }}";
+        });
+        rankedBtn.addEventListener('click', () => {
+            window.location.href = "{{  url_for('ranked_page') }}";
+        });
+
+    </script>
+
+{% endblock %}

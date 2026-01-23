@@ -1,4 +1,4 @@
-from WordleRoyale import game
+from WordleRoyale import game, util
 
 def test_check_guess():
 
@@ -16,7 +16,11 @@ def test_check_guess():
     result = game.check_guess(stage, letters, solution)
     print(result)
 
+def test_util_matching_string_to_letters(matching):
+    result = util.matching_string_to_letters(matching)
+    print(result)
 
 if __name__ == '__main__':
-    test_check_guess()
+    #test_check_guess()
+    test_util_matching_string_to_letters('T2E2S2T2S2')
 

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Wordle Royale{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    {% block links %} {% endblock %}
+</head>
+<body>
+<div class="nav-bar">
+    <div class="nav">
+        <div class="nav-left">
+            <button id="menuBtn" class="nav-button">Menu</button>
+        </div>
+        <div class="nav-center">
+            <img id="logo" class="logo" src="{{ url_for('static', filename='favicon.ico') }}" alt="Logo">
+        </div>
+    </div>
+</div>
+<div id="sideMenu" class="side-menu">
+    <div class="nav-bar">
+        <button id="closeMenuBtn" class="nav-button">close</button>
+        MENU
+    </div>
+    <div class="profile-box">
+        {% if current_user.is_authenticated %}
+            <div>{{ current_user.username }}</div>
+            <div>
+                <span>Streak:</span>
+                <span name="streak"></span>
+
+            </div>
+            <div>
+                <div>
+                    <span>Rank:</span>
+                    <span name="rank">-</span>
+                </div>
+                <div>
+                    <span>Points:</span>
+                    <span name="score">-</span>
+                </div>
+            </div>
+            <a href="/logout">Logout</a>
+        {% else %}
+            <div>Login to access ranked mode</div>
+            <button name="loginBtn">Login</button>
+            <button name="registerBtn">Register</button>
+        {% endif %}
+    </div>
+    <div class="page-navigation">
+        <button id="navDailyBtn">DAILY</button>
+        <button id="navRankedBtn">RANKED</button>
+        <button id="navLeaderboardBtn">LEADERBOARD</button>
+    </div>
+</div>
+<script>
+    let streak = 0;
+    let userScore = {rank: 0, username: '', score: 0};
+    const menuButton = document.getElementById("menuBtn");
+    const closeMenuButton = document.getElementById("closeMenuBtn");
+    const navDailyButton = document.getElementById("navDailyBtn");
+    const navRankedButton = document.getElementById("navRankedBtn");
+    const navLeaderboardButton = document.getElementById("navLeaderboardBtn");
+    const sideMenu = document.getElementById("sideMenu");
+
+    menuButton.addEventListener("click", () => {
+        updateStreakCount();
+        updateUserScore();
+        sideMenu.classList.toggle("visible");
+
+    });
+    closeMenuButton.addEventListener("click", () => {
+       sideMenu.classList.toggle("visible");
+    });
+
+    navDailyButton.addEventListener("click", () => {
+       window.location.href = '{{ url_for('daily_page') }}';
+    });
+    navRankedButton.addEventListener("click", () => {
+       window.location.href = '{{ url_for('ranked_page') }}';
+    });
+    navLeaderboardButton.addEventListener("click", () => {
+       window.location.href = '{{ url_for('leaderboard_page') }}';
+    });
+
+    const loginButtons = document.getElementsByName("loginBtn");
+    const registerButtons = document.getElementsByName("registerBtn");
+    loginButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            let hrefString = "/login";
+            const pathname = window.location.pathname;
+            if(pathname) {
+                hrefString += "?next=" + pathname;
+                console.log(hrefString);
+            }
+            window.location.href = hrefString;
+        });
+    });
+    registerButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            let hrefString = "/register";
+            const pathname = window.location.pathname;
+            if(pathname) {
+                hrefString += "?next=" + pathname;
+                console.log(hrefString);
+            }
+            window.location.href = hrefString;
+        });
+    });
+
+    async function updateStreakCount(){
+        try {
+            const response = await fetch('/api/streak/getStreak');
+            streak = Number.parseInt(await response.text());
+            const streakDivs = document.getElementsByName('streak')
+            streakDivs.forEach((div => {
+                div.textContent = streak;
+            }))
+        }catch (e) {
+            console.error(e);
+        }
+    }
+    async function updateUserScore(){
+        try {
+            const response = await fetch('/api/score/getScore');
+            userScore = await response.json();
+            const scoreSpans = document.getElementsByName('score')
+            scoreSpans.forEach((span) => {
+                span.textContent = userScore.score >= 0? userScore.score: '-';
+            })
+            const rankSpans = document.getElementsByName('rank')
+            rankSpans.forEach((span) => {
+                span.textContent = userScore.rank > 0? userScore.rank: '-';
+            })
+        }catch (e) {
+            console.error(e);
+        }
+    }
+
+    const logo = document.getElementById('logo')
+    logo.addEventListener('click', () => {
+        window.location.href = '/'
+    })
+
+</script>
+{% block content %} {% endblock %}
+
+</body>
+</html>

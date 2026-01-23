@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Daily Wordle - WordleRoyale
+Ranked - WordleRoyale
 {% endblock %}
+
 {% block links %}
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='daily_page.css') }}">
@@ -10,54 +11,48 @@ Daily Wordle - WordleRoyale
     <link rel="stylesheet" href="{{ url_for('static', filename='keyboard.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=keyboard_backspace" />
 {% endblock %}
+
 {% block content %}
+<div class="game">
 
-    <div class="game">
+    {%  include 'letterboard.html' %}
 
-        {%  include 'letterboard.html' %}
-
-        <div id="keyboard-container" class="keyboard-container">
-        </div>
-        <div style="display: none;">
-            <div id="wonBoard" class="game-done-board">
-                <div class="gdb-btn-div">
-                    <button name="seeResultsBtn">See Results</button>
-                </div>
-            </div>
-            <div id="lostBoard" class="game-done-board">
-                <div class="solution-div">The word was: <span name="solution">-</span></div>
-                <div class="gdb-btn-div">
-                    <button name="seeResultsBtn">See Results</button>
-                </div>
-            </div>
-            <div id="keyboard" class="keyboard-container">
-                {%  include 'keyboard.html' %}
+    <div id="keyboard-container" class="keyboard-container">
+    </div>
+    <div style="display: none;">
+        <div id="wonBoard" class="game-done-board">
+            <div class="gdb-btn-div">
+                <button name="seeResultsBtn">See Results</button>
+                <button name="newGameBtn">New Ranked Game</button>
             </div>
         </div>
-
-        <div id="resultsScreen" class="results-screen">
-            <div class="header"><h2>Results</h2></div>
-            <div class="information">
-                <div>The word was: <span name="solution">-</span></div>
-                <div>Guesses: <span name="stage">-</span> </div>
-                {% if current_user.is_authenticated %}
-                    <div>Streak: <span name="streak">-</span></div>
-                {% else %}
-                    <div>Login to save your streak</div>
-                    <button name="loginBtn">Login</button>
-                    <button name="registerBtn">Register</button>
-                {% endif %}
+        <div id="lostBoard" class="game-done-board">
+            <div class="solution-div">The word was: <span name="solution">-</span></div>
+            <div class="gdb-btn-div">
+                <button name="seeResultsBtn">See Results</button>
+                <button name="newGameBtn">New Ranked Game</button>
             </div>
-            <button id="closeResultsBtn">Close</button>
+        </div>
+        <div id="keyboard" class="keyboard-container">
+            {%  include 'keyboard.html' %}
         </div>
     </div>
 
+    <div id="resultsScreen" class="results-screen">
+        <div class="header"><h2>Results</h2></div>
+        <div class="information">
+            <div>The word was: <span name="solution">-</span></div>
+            <div>Guesses: <span name="stage">-</span> </div>
+            <div>Streak: <span name="streak">-</span></div>
+            <div>Gained Points: <span name="pointsGained">-</span></div>
+        </div>
+        <button id="closeResultsBtn">Close</button>
+    </div>
+</div>
 
 <script>
-    const userAuth = {{ current_user.is_authenticated | tojson }};
-    const initialData = {{ initial_data | tojson }};
     console.log("{{ word }}")
-
+    const initialData = {{ initial_data | tojson }};
     const normalizedData = {
         ...initialData,
         letters: initialData.letters.map(row =>
@@ -70,13 +65,13 @@ Daily Wordle - WordleRoyale
         )
     };
     const resultsScreen = document.getElementById('resultsScreen');
+    let pointsGained = 0;
     let letters;
     let status;
     let stage;
     updateStage(normalizedData.stage); //IMPORTANT: update stage before letters
     updateLetters(normalizedData.letters);
     updateStatus(normalizedData.status);
-
 
     document.addEventListener('DOMContentLoaded', () => { renderTiles(); renderKeyboard(); });
 
@@ -178,7 +173,7 @@ Daily Wordle - WordleRoyale
                 return;
             }
 
-            const response = await fetch('/api/solve/daily', {
+            const response = await fetch('/api/solve/ranked', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -186,6 +181,7 @@ Daily Wordle - WordleRoyale
                 body: JSON.stringify({stage: stage, letters: letters })
             })
             const data = await response.json();
+            pointsGained = data['increase'];
             updateStage(data['stage']); //IMPORTANT: update stage before letters
             updateLetters(data['letters']);
             updateStatus(data['status']);
@@ -198,41 +194,72 @@ Daily Wordle - WordleRoyale
 
     function toggleResultsScreen(){
         resultsScreen.classList.toggle("visible");
-        if( userAuth ){
-            updateStreakCount()
-        }
-        updateResultsStage()
+        updateStreakCount()
+        updateResultsPointsGained()
+        updateResultsStage();
     }
+
     function updateResultsStage() {
         const stageSpans = document.getElementsByName('stage');
         stageSpans.forEach((span) => {
                 span.textContent = stage;
         })
     }
+    function updateResultsPointsGained() {
+        const stageSpans = document.getElementsByName('pointsGained');
+        stageSpans.forEach((span) => {
+            console.log(pointsGained)
+                span.textContent = pointsGained;
+        })
+    }
 
     function registerResultsButtonsListener() {
         const seeResultsButtons = document.getElementsByName('seeResultsBtn');
-        const closeResultsButton = document.getElementById('closeResultsBtn')
+        const closeResultsButton = document.getElementById('closeResultsBtn');
         seeResultsButtons.forEach((btn) => {
             btn.addEventListener('click', () => {
                 toggleResultsScreen();
             });
         });
-        closeResultsButton.addEventListener('click',toggleResultsScreen)
+
+        closeResultsButton.addEventListener('click', toggleResultsScreen )
+        const newGameButtons = document.getElementsByName('newGameBtn');
+        newGameButtons.forEach((btn) => {
+            console.log('register new game', btn)
+            btn.addEventListener('click', () => {
+                console.log('clicked new game')
+                resetGame();
+            });
+        });
+    }
+
+    async function resetGame() {
+        console.log('resetting  game');
+
+        const response = await fetch('/api/newRankedGame');
+        const data = await response.json();
+        updateStatus(data['status']);
+        updateStage(data['stage']); //IMPORTANT: update stage before letters
+        updateLetters(data['letters']);
+        knownIncorrectLetters.clear();
+        knownCorrectLetters.clear();
+        knownMisplacedLetters.clear();
+        renderKeyboard()
+
     }
 
     async function retrieveSolution() {
         try {
-            const response = await fetch('/api/getDailySolution');
+            const response = await fetch('/api/getRankedSolution');
             const solution = await response.text();
+            console.log('solution:', solution)
             const solutionSpans = document.getElementsByName('solution');
             solutionSpans.forEach((solutionSpan) => {
                 solutionSpan.textContent = solution;
-            })
+            });
         }catch (e) {
             console.error(e);
         }
     }
 </script>
-
 {% endblock %}

@@ -1,6 +1,5 @@
 body {
-    background-color: white;
-    padding: 1rem;
+    background-color: var(--bg-color);
 }
 
 .game{
@@ -12,72 +11,104 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: center;
+      padding: 1rem;
 
     .board{
       display: flex;
       flex-direction: column;
       gap: 5px;
 
-      .row{
-        display: flex;
-        flex-direction: row;
-        gap: 5px;
-
-        .tile{
-            display: flex;
-            flex-wrap: wrap;
-          width: 5rem;
-          height: 5rem;
-          border: 1px solid black;
-            align-content: center;
-            justify-content: center;
-
-            &.absent{
-                background-color: #9f9f9f;
-            }
-            &.wrong-position{
-                background-color: #e8cb64;
-            }
-            &.correct{
-                background-color: #3ac824;
-            }
-
-
-        }
-      }
     }
   }
     .keyboard-container{
         display: flex;
         flex-direction: row;
         justify-content: center;
-
-        .keyboard{
+    }
+    .game-done-board{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+        .solution-div{
             display: flex;
-            flex-direction: column;
-            gap: 5px;
-            .button-row{
-                display: flex;
-                flex-direction: row;
-                gap: 5px;
-                justify-content: center;
-
-                button{
-                    font-size: 1.25rem;
-                    font-weight: bold;
-                    width: 3rem;
-                    height: 4rem;
-                    background-color: lightgray;
-                    border: none;
-                    border-radius: 2px;
-                }
-                .enter-backspace{
-                    flex-grow: 1;
-                    font-size: 1rem;
-                }
+            justify-content: center;
+            font-size: 20px;
+            span{
+                margin-left: 2px;
             }
         }
+        .gdb-btn-div {
+           display: flex;
+            flex-direction: row;
+            gap: 10px;
 
+            button{
+                width: 200px;
+                height: 30px;
+            }
+        }
     }
 }
+
+.results-screen {
+    visibility: hidden;
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    background-color: var(--bg-color);
+    border: 1px solid var(--font-color);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    justify-content: space-between;
+
+    .information{
+        font-size: 1.2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .header{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+}
+.incorrect {
+    background-color: #454545 !important;
+}
+.misplaced {
+    background-color: #b3b309 !important;
+}
+.correct {
+    background-color: #016801 !important;
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    50% {
+        transform: translateX(10px);
+    }
+    75% {
+        transform: translateX(-0px);
+    }
+    100% {
+        transform: translateX(0px);
+    }
+}
+
 

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Daily Wordle - WordleRoyale
+{% endblock %}
+{% block links %}
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='leaderboard.css') }}">
+{% endblock %}
+
+{% block content %}
+
+    <div class="content">
+        <table>
+            <tbody id="leaderboard-body">
+                <tr>
+                    <th class="index">Rank</th>
+                    <th class="user">User</th>
+                    <th class="score">Score</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const top20 = {{ top20 | tojson }}
+        userScore = {{ user_score | tojson }}
+        console.log(userScore)
+        const tbody = document.getElementById("leaderboard-body");
+
+        const tr = document.createElement("tr");
+        const userRank = userScore.rank !== -1? userScore.rank : '-';
+        tr.innerHTML = `
+            <td class="index"><span>${userRank}</span></td>
+            <td class="user"><span>${userScore.username}</span></td>
+            <td class="score"><span>${userScore.score}</span></td>
+        `;
+        tr.classList.add("self");
+        tbody.appendChild(tr);
+
+        top20.forEach((score, index) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td class="index"><span>${index + 1}</span></td>
+                <td class="user"><span>${score.username}</span></td>
+                <td class="score"><span>${score.score}</span></td>
+            `;
+            if(score.username === userScore.username) tr.classList.add("self");
+            tbody.appendChild(tr);
+
+        })
+    </script>
+
+
+{% endblock %}

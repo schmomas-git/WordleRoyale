@@ -1,0 +1,96 @@
+:root{
+    --primary-color: #9A97F3;
+    --secondary-color: #818cab;
+    --font-color: #e1e1ff;
+    --bg-color: #121213;
+    --heading-color: #818cab;
+    --gold: #B29352;
+}
+body{
+    margin: 0;
+    color: var(--font-color);
+    font-family: helvetica, serif ;
+}
+
+.nav-bar{
+    height: 3.5rem;
+    background-color: var(--bg-color);
+    width: 100%;
+    border-bottom: solid 1px #9f9f9f;
+}
+.nav {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.nav-button {
+    height: 100%;
+    width: 3.5rem;
+    border: 0;
+    background-color: var(--bg-color);
+    color: var(--font-color);
+
+    &:hover{
+        background-color: #45456a;
+    }
+}
+
+.nav-left, .nav-right {
+    height: 100%;
+    display: flex;
+    gap: 10px;
+}
+.nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.nav-center img {
+}
+.logo{
+    width: 48px;
+    height: 48px;
+}
+
+.side-menu{
+    visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 20%;
+    z-index: 5;
+    background-color: var(--bg-color);
+    border-right: solid 1px #9f9f9f;
+}
+.visible{
+    visibility: visible !important;
+}
+.profile-box {
+    width: calc(100% - 10px);
+    padding: 5px;
+    min-height: 100px;
+    height: 5rem;
+    background-color: var(--primary-color);
+}
+.page-navigation {
+    display: flex;
+    flex-direction: column;
+
+    button{
+        background-color: var(--bg-color);
+        color: var(--font-color);
+        font-size: 20px;
+        border: none;
+        border-bottom: 1px solid gold;
+        padding-block: 10px;
+        cursor: pointer;
+
+        &:hover{
+            background-color: #45456a;
+        }
+    }
+}

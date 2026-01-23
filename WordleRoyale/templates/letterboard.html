@@ -1,0 +1,76 @@
+<div class="board-container">
+    <div class="board">
+        <div class="row">
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+        </div>
+        <div class="row">
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+        </div>
+        <div class="row">
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+        </div>
+        <div class="row">
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+        </div>
+        <div class="row">
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+        </div>
+        <div class="row">
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function renderTiles() {
+        const rows = document.querySelectorAll('.row');
+        for(let y = 0; y < letters.length; y++){
+            for(let x = 0; x < letters[y].length; x++){
+                let div = rows[y].children[x];
+                div.classList.remove("incorrect")
+                div.classList.remove("misplaced")
+                div.classList.remove("correct")
+                let letter = letters[y][x];
+                switch (letter.status){
+                    case -1:
+                        break;
+                    case 0:
+                        div.classList.add("incorrect");
+                        break;
+                    case 1:
+                        div.classList.add("misplaced")
+                        break;
+                    case 2:
+                        div.classList.add('correct')
+                        break;
+                }
+                div.firstChild.textContent = letter.letter
+            }
+        }
+    }
+</script>

@@ -1,0 +1,49 @@
+body{
+    background-color: var(--bg-color);
+}
+.content{
+    padding: 3rem;
+}
+table{
+    width: 100%;
+    border: 2px solid white;
+    padding: 0;
+}
+th{
+
+    &:not(:first-child){
+    border-left: 2px solid white;
+    }
+}
+tr{
+    display: flex;
+    flex-direction: row;
+    &:not(:last-child) {
+        border-bottom: 2px solid white;
+    }
+    .index{
+        flex: 0 0 50px;
+
+    }
+    .user{
+        flex: 1 0 50px;
+
+    }
+    .score{
+        flex: 1 0 50px;
+
+    }
+
+}
+td{
+
+    &:not(:first-child){
+    border-left: 2px solid white;
+    }
+    span {
+        padding-left: 4px;
+    }
+}
+.self{
+    background-color: darkgoldenrod;
+}

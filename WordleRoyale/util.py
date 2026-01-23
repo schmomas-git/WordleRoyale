@@ -3,34 +3,25 @@ import random
 import uuid
 
 
+def get_next_midnight():
+    now = datetime.datetime.now()
+    tomorrow_midnight = datetime.datetime.combine(
+        now.date() + datetime.timedelta(days=1),
+        datetime.datetime.min.time()
+    )
+    return tomorrow_midnight
+
 def get_date_string():
     current_date = datetime.datetime.now()
     return f'{current_date.year}-{current_date.month}-{current_date.day}'
 
-def get_daily_index():
-    seed = get_date_string() + 'WordleRoyale1s7he8est'
-    rng = random.Random(seed)
-    index = rng.randrange(1, 336)
-    return index
+def matching_string_to_letters(matching):
+    letters_stage = []
+    pieces = [matching[i:i + 2] for i in range(0, len(matching), 2)]
 
-def combine_word_matching_string(word, matching):
-    if len(word) != len(matching):
-        return None
-
-    combination = []
-    for position in range(len(matching)):
-        combination.append(word[position] + matching[position])
-
-    return combination
-
-def split_word_matching_string(combination):
-    word = []
-    matching = []
-    for entry in combination:
-        word.append(entry[0])
-        matching.append(entry[1])
-
-    return word, matching
+    for piece in pieces[0:5]:
+        letters_stage.append({'letter': piece[0], 'status': piece[1]})
+    return letters_stage
 
 def split_word_matching(combination):
     word = []
@@ -60,4 +51,4 @@ def attempt_string_from_letters(letters, stage):
     attempt_string = ''
     for letter in attempt:
         attempt_string += letter['letter'] + str(letter['status'])
-    print(attempt_string)
+    return attempt_string
