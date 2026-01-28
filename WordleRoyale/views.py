@@ -5,8 +5,7 @@ from flask_security import current_user, auth_required
 
 
 @app.route('/')
-def index():
-
+def home():
     return render_template('home.html')
 
 @app.route('/daily')
@@ -17,7 +16,7 @@ def daily_page():
         game.try_update_streak()
 
     word = game.get_daily_word()
-    return render_template('daily_page.html', word=word, initial_data=initial_data)
+    return render_template('daily_page.html', initial_data=initial_data)
 
 @app.route('/ranked')
 @auth_required('token', 'session')
@@ -27,13 +26,11 @@ def ranked_page():
     session_for_word = models.RankedSession.query.get(current_user.get_id())
     word = session_for_word.solution
 
-    return render_template('ranked_page.html', word=word, initial_data=initial_data)
+    return render_template('ranked_page.html', initial_data=initial_data)
 
 @app.route('/leaderboard')
 def leaderboard_page():
     (top20, user_score) = game.get_leaderboard()
-    print(user_score)
-    print(len(top20))
     return render_template('leaderboard.html', top20=top20, user_score=user_score)
 
 @app.route('/api/validWord', methods=['POST'])
@@ -62,18 +59,18 @@ def solve_ranked():
     (stage, letters, status, increase) = game.solve_ranked(data)
     return make_response({'status': status, 'stage': stage, 'letters': letters, 'increase': increase})
 
-@app.route('/api/streak/getStreak')
+@app.route('/api/get/streak')
 def streak_get():
     if not current_user.is_authenticated:
         return str(-1)
     return str(game.retrieve_user_streak(current_user.get_id()))
 
-@app.route('/api/score/getScore')
+@app.route('/api/get/score')
 def score_get():
     ( _, user_score) = game.get_leaderboard()
     return jsonify(user_score)
 
-@app.route('/api/getDailySolution')
+@app.route('/api/get/dailySolution')
 def get_daily_solution():
     session_id = request.cookies.get('session_id')
     if not session_id:
@@ -81,7 +78,7 @@ def get_daily_solution():
     solution = game.get_daily_solution(session_id)
     return solution
 
-@app.route('/api/getRankedSolution')
+@app.route('/api/get/rankedSolution')
 def get_ranked_solution():
     solution = game.get_ranked_solution()
     return solution

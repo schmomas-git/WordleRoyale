@@ -25,7 +25,6 @@ Daily Wordle - WordleRoyale
     <script>
         const top20 = {{ top20 | tojson }}
         userScore = {{ user_score | tojson }}
-        console.log(userScore)
         const tbody = document.getElementById("leaderboard-body");
 
         const tr = document.createElement("tr");

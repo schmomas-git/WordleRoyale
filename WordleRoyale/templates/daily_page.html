@@ -56,7 +56,6 @@ Daily Wordle - WordleRoyale
 <script>
     const userAuth = {{ current_user.is_authenticated | tojson }};
     const initialData = {{ initial_data | tojson }};
-    console.log("{{ word }}")
 
     const normalizedData = {
         ...initialData,
@@ -82,7 +81,6 @@ Daily Wordle - WordleRoyale
 
     function updateLetters(newLetters){
         letters = newLetters;
-        console.log(newLetters)
         if(stage > 0) {
             for (let i = 0; i < 5; i++) {
                 let letter = letters[stage - 1][i];
@@ -133,33 +131,15 @@ Daily Wordle - WordleRoyale
         stage = newStage;
     }
 
-    function addLetterToLetters(letter) {
-        if (!letters || stage === undefined) return;
-        for (let i = 0; i < letters[stage].length; i++) {
-            if (letters[stage][i].letter === "") {
-                letters[stage][i].letter = letter;
-                break;
-            }
-        }
-    }
-    function removeLastLetterFromLetters() {
-        if (!letters || stage === undefined) return;
-        for (let i = letters[stage].length - 1; i >= 0; i--) {
-            if (letters[stage][i].letter !== "") {
-                letters[stage][i].letter = "";
-                break;
-            }
-        }
-    }
+
 
 
     async function send(){
         if(letters[stage].length !== 5 || letters[stage].at(4).letter === '' ){
-            console.log('cant send')
             return;
         }
         try {
-            const wordIsValid = await fetch('/api/validWord', {
+            const wordIsValid = await fetch("{{ url_for('valid_word') }}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -178,7 +158,7 @@ Daily Wordle - WordleRoyale
                 return;
             }
 
-            const response = await fetch('/api/solve/daily', {
+            const response = await fetch("{{ url_for('solve_daily') }}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -223,7 +203,7 @@ Daily Wordle - WordleRoyale
 
     async function retrieveSolution() {
         try {
-            const response = await fetch('/api/getDailySolution');
+            const response = await fetch("{{ url_for('get_daily_solution') }}");
             const solution = await response.text();
             const solutionSpans = document.getElementsByName('solution');
             solutionSpans.forEach((solutionSpan) => {

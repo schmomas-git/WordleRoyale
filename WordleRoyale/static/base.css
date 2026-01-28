@@ -1,5 +1,5 @@
 :root{
-    --primary-color: #9A97F3;
+    --primary-color: darkgoldenrod;
     --secondary-color: #818cab;
     --font-color: #e1e1ff;
     --bg-color: #121213;
@@ -16,7 +16,21 @@ body{
     height: 3.5rem;
     background-color: var(--bg-color);
     width: 100%;
-    border-bottom: solid 1px #9f9f9f;
+    border-bottom: solid 1px var(--primary-color);
+    display: flex;
+    flex-direction: row;
+    .menu-header{
+        width: calc(100% - 3.5rem);
+        height: 100%;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+
+        span {
+            font-size: 20px;
+            margin-left: -3.5rem;
+        }
+    }
 }
 .nav {
     height: 100%;
@@ -32,7 +46,7 @@ body{
     color: var(--font-color);
 
     &:hover{
-        background-color: #45456a;
+        background-color: rgba(184, 134, 11, 0.35);
     }
 }
 
@@ -45,12 +59,15 @@ body{
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    display: flex;
+    align-items: center;
 }
 .nav-center img {
 }
 .logo{
     width: 48px;
     height: 48px;
+    cursor: pointer;
 }
 
 .side-menu{
@@ -64,17 +81,51 @@ body{
     width: 20%;
     z-index: 5;
     background-color: var(--bg-color);
-    border-right: solid 1px #9f9f9f;
+    border-right: solid 1px var(--primary-color);
 }
 .visible{
     visibility: visible !important;
 }
 .profile-box {
-    width: calc(100% - 10px);
-    padding: 5px;
+    width: calc(100% - 20px);
+    padding: 10px;
     min-height: 100px;
-    height: 5rem;
+    height: 7.5rem;
     background-color: var(--primary-color);
+
+    .username {
+        width: 100%;
+        text-align: center;
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    .top-text{
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    .profile-item{
+        font-size: 18px;
+    }
+    .one-line{
+        display:flex;
+        flex-direction: row;
+        gap: 10px;
+    }
+    .logout-button{
+        width: 100%;
+        margin-top: 15px;
+        font-size: 15px;
+    }
+    .login-div{
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        margin-top: 15px;
+        .login-register-button{
+            font-size: 15px;
+            flex: 1;
+        }
+    }
 }
 .page-navigation {
     display: flex;
@@ -85,12 +136,12 @@ body{
         color: var(--font-color);
         font-size: 20px;
         border: none;
-        border-bottom: 1px solid gold;
+        border-bottom: 1px solid darkgoldenrod;
         padding-block: 10px;
         cursor: pointer;
 
         &:hover{
-            background-color: #45456a;
+            background-color: rgba(184, 134, 11, 0.35);
         }
     }
 }

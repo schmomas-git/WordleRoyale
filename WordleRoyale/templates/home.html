@@ -9,25 +9,39 @@ Daily Wordle - WordleRoyale
 {% endblock %}
 {% block content %}
 
-    <div class="content">
-        <div class="side-by-side">
-            <span>Daily Wordle</span>
-            <button id="dailyBtn">Play Daily</button>
+    <div class="side-by-side">
+        <div class="one-side">
+            <div class="image-with-button">
+                <img id="daily-img" class="img" src="{{ url_for('static', filename='daily.png') }}" alt="Daily Image">
+                <button id="dailyBtn">Play Daily</button>
+            </div>
         </div>
-        <div class="side-by-side">
-            <span>Ranked</span>
-            <button id="rankedBtn">Play Ranked</button>
+        <div class="one-side">
+            <div class="image-with-button">
+                <img id="ranked-img" class="img" src="{{ url_for('static', filename='ranked.png') }}" alt="Ranked Image">
+                <button id="rankedBtn">Play Ranked</button>
+            </div>
+        </div>
+    </div>
+    <div class="leaderboard-section">
+        <div class="image-with-button">
+            <img id="leaderboard-img" class="small-img" src="{{ url_for('static', filename='leaderboard.png') }}" alt="Leaderboard Image">
+            <button id="leaderboardBtn">Show Leaderboard</button>
         </div>
     </div>
 
     <script>
         const dailyBtn = document.getElementById("dailyBtn");
         const rankedBtn = document.getElementById("rankedBtn");
+        const leaderboardBtn = document.getElementById("leaderboardBtn");
         dailyBtn.addEventListener('click', () => {
             window.location.href = "{{  url_for('daily_page') }}";
         });
         rankedBtn.addEventListener('click', () => {
             window.location.href = "{{  url_for('ranked_page') }}";
+        });
+        leaderboardBtn.addEventListener('click', () => {
+            window.location.href = "{{  url_for('leaderboard_page') }}";
         });
 
     </script>

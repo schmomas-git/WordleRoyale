@@ -218,7 +218,7 @@ def get_ranked_solution():
 
 def get_leaderboard():
     top20 = []
-    user_score = {'username': '-', 'score': 0}
+    user_score = {'rank': '-', 'username': '-', 'score': 0}
     scores = (
         models.Score.query
         .order_by(models.Score.score.desc())

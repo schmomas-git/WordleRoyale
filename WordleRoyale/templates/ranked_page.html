@@ -51,7 +51,6 @@ Ranked - WordleRoyale
 </div>
 
 <script>
-    console.log("{{ word }}")
     const initialData = {{ initial_data | tojson }};
     const normalizedData = {
         ...initialData,
@@ -77,7 +76,6 @@ Ranked - WordleRoyale
 
     function updateLetters(newLetters){
         letters = newLetters;
-        console.log(newLetters)
         if(stage > 0) {
             for (let i = 0; i < 5; i++) {
                 let letter = letters[stage - 1][i];
@@ -128,33 +126,13 @@ Ranked - WordleRoyale
         stage = newStage;
     }
 
-    function addLetterToLetters(letter) {
-        if (!letters || stage === undefined) return;
-        for (let i = 0; i < letters[stage].length; i++) {
-            if (letters[stage][i].letter === "") {
-                letters[stage][i].letter = letter;
-                break;
-            }
-        }
-    }
-    function removeLastLetterFromLetters() {
-        if (!letters || stage === undefined) return;
-        for (let i = letters[stage].length - 1; i >= 0; i--) {
-            if (letters[stage][i].letter !== "") {
-                letters[stage][i].letter = "";
-                break;
-            }
-        }
-    }
-
 
     async function send(){
         if(letters[stage].length !== 5 || letters[stage].at(4).letter === '' ){
-            console.log('cant send')
             return;
         }
         try {
-            const wordIsValid = await fetch('/api/validWord', {
+            const wordIsValid = await fetch("{{ url_for('valid_word') }}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -173,7 +151,7 @@ Ranked - WordleRoyale
                 return;
             }
 
-            const response = await fetch('/api/solve/ranked', {
+            const response = await fetch("{{ url_for('solve_ranked') }}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -208,7 +186,6 @@ Ranked - WordleRoyale
     function updateResultsPointsGained() {
         const stageSpans = document.getElementsByName('pointsGained');
         stageSpans.forEach((span) => {
-            console.log(pointsGained)
                 span.textContent = pointsGained;
         })
     }
@@ -225,18 +202,14 @@ Ranked - WordleRoyale
         closeResultsButton.addEventListener('click', toggleResultsScreen )
         const newGameButtons = document.getElementsByName('newGameBtn');
         newGameButtons.forEach((btn) => {
-            console.log('register new game', btn)
             btn.addEventListener('click', () => {
-                console.log('clicked new game')
                 resetGame();
             });
         });
     }
 
     async function resetGame() {
-        console.log('resetting  game');
-
-        const response = await fetch('/api/newRankedGame');
+        const response = await fetch("{{ url_for('new_ranked_game') }}");
         const data = await response.json();
         updateStatus(data['status']);
         updateStage(data['stage']); //IMPORTANT: update stage before letters
@@ -250,9 +223,8 @@ Ranked - WordleRoyale
 
     async function retrieveSolution() {
         try {
-            const response = await fetch('/api/getRankedSolution');
+            const response = await fetch("{{ url_for('get_ranked_solution') }}");
             const solution = await response.text();
-            console.log('solution:', solution)
             const solutionSpans = document.getElementsByName('solution');
             solutionSpans.forEach((solutionSpan) => {
                 solutionSpan.textContent = solution;

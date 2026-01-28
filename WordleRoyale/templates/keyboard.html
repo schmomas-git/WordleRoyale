@@ -31,7 +31,7 @@
         <button data-char="B">B</button>
         <button data-char="N">N</button>
         <button data-char="M">M</button>
-        <button data-char="BACKSPACE" class="enter-backspace"><span class="material-symbols-outlined">keyboard_backspace</span></button>
+        <button data-char="BACKSPACE" class="enter-backspace"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="30" viewBox="0 0 100 60"><polyline points="40,10 10,30 40,50" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="30" x2="90" y2="30" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg></button>
     </div>
 </div>
 
@@ -41,7 +41,6 @@
     const knownMisplacedLetters = new Set();
 
     function renderKeyboard() {
-        console.log(knownIncorrectLetters, knownCorrectLetters);
         const buttons = document.querySelectorAll("button[data-char]");
         buttons.forEach(button => {
             button.classList.remove("incorrect")
@@ -68,11 +67,8 @@
         renderTiles();
     }
 
-
-
     document.addEventListener("DOMContentLoaded", () => {
         const buttons = document.querySelectorAll("button[data-char]");
-        console.log(buttons)
 
         buttons.forEach(button => {
             button.addEventListener("click", () => {
@@ -87,7 +83,6 @@
     });
 
     function handleKeydown(event){
-        console.log('handleKeydown', event.key)
         if(event.ctrlKey){
             return
         }
@@ -122,6 +117,25 @@
                 break;
             default:
                 break;
+        }
+    }
+
+    function addLetterToLetters(letter) {
+        if (!letters || stage === undefined) return;
+        for (let i = 0; i < letters[stage].length; i++) {
+            if (letters[stage][i].letter === "") {
+                letters[stage][i].letter = letter;
+                break;
+            }
+        }
+    }
+    function removeLastLetterFromLetters() {
+        if (!letters || stage === undefined) return;
+        for (let i = letters[stage].length - 1; i >= 0; i--) {
+            if (letters[stage][i].letter !== "") {
+                letters[stage][i].letter = "";
+                break;
+            }
         }
     }
 

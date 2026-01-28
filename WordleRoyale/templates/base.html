@@ -10,41 +10,47 @@
 <div class="nav-bar">
     <div class="nav">
         <div class="nav-left">
-            <button id="menuBtn" class="nav-button">Menu</button>
+            <button id="menuBtn" class="nav-button"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <line x1="4" y1="7" x2="20" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round" /> <line x1="4" y1="12" x2="20" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" /> <line x1="4" y1="17" x2="20" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" /> </svg></button>
         </div>
         <div class="nav-center">
-            <img id="logo" class="logo" src="{{ url_for('static', filename='favicon.ico') }}" alt="Logo">
+            <img id="logo" class="logo" src="{{ url_for('static', filename='crown.png') }}" alt="Logo">
         </div>
     </div>
 </div>
 <div id="sideMenu" class="side-menu">
     <div class="nav-bar">
-        <button id="closeMenuBtn" class="nav-button">close</button>
-        MENU
+        <button id="closeMenuBtn" class="nav-button"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <line x1="5" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" /> <line x1="19" y1="5" x2="5" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" /> </svg></button>
+        <div class="menu-header">
+            <span>MENU</span>
+        </div>
     </div>
     <div class="profile-box">
         {% if current_user.is_authenticated %}
-            <div>{{ current_user.username }}</div>
-            <div>
+            <div class="username">{{ current_user.username }}</div>
+            <div class="profile-item">
                 <span>Streak:</span>
                 <span name="streak"></span>
 
             </div>
-            <div>
-                <div>
+            <div class="one-line">
+                <div class="profile-item">
                     <span>Rank:</span>
                     <span name="rank">-</span>
                 </div>
-                <div>
+                <div class="profile-item">
                     <span>Points:</span>
                     <span name="score">-</span>
                 </div>
             </div>
-            <a href="/logout">Logout</a>
+            <button id="logoutBtn" class="logout-button">Logout</button>
         {% else %}
-            <div>Login to access ranked mode</div>
-            <button name="loginBtn">Login</button>
-            <button name="registerBtn">Register</button>
+            <div class="top-text">Login to access the following:</div>
+            <div class="profile-item">Private Streak</div>
+            <div class="profile-item">Ranked Mode</div>
+            <div class="login-div">
+                <button name="loginBtn" class="login-register-button">Login</button>
+                <button name="registerBtn" class="login-register-button">Register</button>
+            </div>
         {% endif %}
     </div>
     <div class="page-navigation">
@@ -85,32 +91,36 @@
 
     const loginButtons = document.getElementsByName("loginBtn");
     const registerButtons = document.getElementsByName("registerBtn");
+    const logoutButton = document.getElementById("logoutBtn");
     loginButtons.forEach((button) => {
         button.addEventListener("click", () => {
-            let hrefString = "/login";
+            let hrefString = "{{ url_for('security.login') }}";
             const pathname = window.location.pathname;
             if(pathname) {
                 hrefString += "?next=" + pathname;
-                console.log(hrefString);
             }
             window.location.href = hrefString;
         });
     });
     registerButtons.forEach((button) => {
         button.addEventListener("click", () => {
-            let hrefString = "/register";
+            let hrefString = "{{ url_for('security.register') }}";
             const pathname = window.location.pathname;
             if(pathname) {
                 hrefString += "?next=" + pathname;
-                console.log(hrefString);
             }
             window.location.href = hrefString;
         });
     });
+    if(logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            window.location.href = "{{ url_for('security.logout') }}";
+        })
+    }
 
     async function updateStreakCount(){
         try {
-            const response = await fetch('/api/streak/getStreak');
+            const response = await fetch("{{ url_for('streak_get') }}");
             streak = Number.parseInt(await response.text());
             const streakDivs = document.getElementsByName('streak')
             streakDivs.forEach((div => {
@@ -122,7 +132,7 @@
     }
     async function updateUserScore(){
         try {
-            const response = await fetch('/api/score/getScore');
+            const response = await fetch("{{ url_for('score_get') }}");
             userScore = await response.json();
             const scoreSpans = document.getElementsByName('score')
             scoreSpans.forEach((span) => {
@@ -139,7 +149,7 @@
 
     const logo = document.getElementById('logo')
     logo.addEventListener('click', () => {
-        window.location.href = '/'
+        window.location.href = "{{ url_for('home') }}"
     })
 
 </script>

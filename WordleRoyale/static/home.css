@@ -5,17 +5,41 @@ body {
     flex-direction: column;
 }
 
-.content{
+.side-by-side{
     display: flex;
     flex-direction: row;
-    flex: 1 0;
+    flex: 9 0;
+    border-bottom: 1px solid var(--primary-color);
 }
-.side-by-side{
+.one-side{
     width: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     &:first-child {
-        border-right: 4px solid white;
+        border-right: 1px solid var(--primary-color);
     }
+}
+.image-with-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .img {
+        width: 240px;
+        height: 240px;
+    }
+    .small-img {
+        width: 96px;
+        height: 96px;
+    }
+}
+
+
+.leaderboard-section{
+    flex: 1 0 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
