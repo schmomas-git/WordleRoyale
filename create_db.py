@@ -6,9 +6,9 @@ with app.app_context():
 
     with db.session.begin():
         db.session.query(models.Word).delete()
-        #db.session.query(models.RankedSession).delete()
-        #db.session.query(models.DailySession).delete()
-        #db.session.query(models.Streak).delete()
+        db.session.query(models.RankedSession).delete()
+        db.session.query(models.DailySession).delete()
+        db.session.query(models.Streak).delete()
         db.session.query(models.Score).delete()
         db.session.commit()
 

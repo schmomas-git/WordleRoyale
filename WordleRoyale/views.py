@@ -14,8 +14,6 @@ def daily_page():
     initial_data = game.get_initial_data_daily(session_cookie)
     if initial_data['status'] == 'won':
         game.try_update_streak()
-
-    word = game.get_daily_word()
     return render_template('daily_page.html', initial_data=initial_data)
 
 @app.route('/ranked')
